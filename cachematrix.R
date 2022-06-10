@@ -1,24 +1,33 @@
-makeCacheMatrix <- function(x = matrix(sample(1:100,9),3,3)) {
-  s <- NULL
-  set <- function(y) {
-    x <<- y
-    s <<- NULL
+## This function creates a special matrix object that can cache its inverse.
+## Sample is the matrix object that user will submit on the console
+
+makeCacheMatrix <- function(sample = matrix()) {
+  invsample <- NULL
+  set <- function(x) {
+    Sample <<- x
+    invsample <<- NULL
   }
-  get <- function() x
-  setsolve <- function(solve) s <<- solve
-  getsolve <- function() s
-  list(set = set, get = get,
-       setsolve = setsolve,
-       getsolve = getsolve)
+  get <- function() sample
+  setInverse <- function(inverse) inv <<- inverse
+  getInverse <- Function() invsample
+  list(set = set,
+       get = get,
+       setInverse = setInverse,
+       getInverse = getInverse)
 }
-cacheSolve <- function(x, ...) {
-  s <- x$getsolve()
-  if(!is.null(s)) {
-    message("getting inversed matrix")
-    return(s)
-  }
-  data <- x$get()
-  s <- solve(data, ...)
-  x$setsolve(s)
-  s
+
+## This function computes the inverse of the special matrix created by makeCacheMatrix above. 
+##If the inverse has already been calculated and the matrix has not changed, then it should retrieve the inverse from the cache.
+
+cacheSolve <- function(sample, ...) {
+  ##Return a matrix that is the inverse of the sample
+  inv <- sample$getInverse()
+  if (!is.null(inv)) {
+    message("getting cached data")
+    return(invsample)
+    }
+  mat<-sample$get()
+  invsample <- solve(mat, ...)
+  sample$setInverse(invsample)
+  invsample
 }
